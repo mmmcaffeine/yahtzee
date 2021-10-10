@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FakeItEasy;
 using FluentAssertions;
 using Xunit;
@@ -39,6 +40,30 @@ namespace Dgt.Yahtzee.Engine
             
             // Assert
             roundScore.Should().Be(12);
+        }
+
+        // TODO Enhance the exception check
+        // * It should indicate the score in some way
+        // * It should indicate the categories in some way
+        // * It should indicate the category selector in some way
+        // It might make sense to put these in Data if we don't want to build a custom exception type
+        // It might make sense to suffix these onto Message if we don't want to build a custom exception type
+        [Fact]
+        public void GetRoundScore_Should_ThrowWhenNoCategoryIsSelected()
+        {
+            // Arrange
+            var fakeScoreParser = A.Fake<IScoreParser>();
+            var fakeCategorySelector = A.Fake<ICategorySelector>();
+
+            A.CallTo(() => fakeCategorySelector.SelectCategory(An<IEnumerable<int>>._, A<string>._, An<IEnumerable<ICategory>>._))
+                .Returns(null);
+
+            var sut = new GameScorer(fakeScoreParser, Array.Empty<ICategory>(), fakeCategorySelector);
+
+            // Act, Assert
+            sut.Invoking(x => x.GetRoundScore("(1, 2, 1, 3, 5) ones"))
+                .Should().Throw<InvalidOperationException>()
+                .And.Message.Should().StartWith("The score for the round did not match any of the available categories.");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Dgt.Yahtzee.Engine
@@ -17,14 +18,20 @@ namespace Dgt.Yahtzee.Engine
             _categorySelector = categorySelector;
         }
 
-        // TODO We've assumed we are going to find a category, and that might not be the case. An InvalidOperationException would make sense
         public int GetRoundScore(string score)
         {
             var scoreValues = _scoreParser.GetScoreValues(score).ToList();
             var categoryName = _scoreParser.GetCategoryName(score);
             var category = _categorySelector.SelectCategory(scoreValues, categoryName, _categories);
-            
-            return category!.GetCategoryScore(scoreValues);
+
+            return category is not null
+                ? category.GetCategoryScore(scoreValues)
+                : throw CreateExceptionForNoMatchingCategory();
+        }
+
+        private static Exception CreateExceptionForNoMatchingCategory()
+        {
+            return new InvalidOperationException("The score for the round did not match any of the available categories.");
         }
     }
 }
