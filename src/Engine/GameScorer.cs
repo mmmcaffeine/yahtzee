@@ -7,22 +7,24 @@ namespace Dgt.Yahtzee.Engine
     {
         private readonly IScoreParser _scoreParser;
         private readonly IEnumerable<ICategory> _categories;
+        private readonly ICategorySelector _categorySelector;
 
         // TODO Parameter validation - no nulls, but an empty enumerable is allowed
-        public GameScorer(IScoreParser scoreParser, IEnumerable<ICategory> categories)
+        public GameScorer(IScoreParser scoreParser, IEnumerable<ICategory> categories, ICategorySelector categorySelector)
         {
             _scoreParser = scoreParser;
             _categories = categories;
+            _categorySelector = categorySelector;
         }
 
         // TODO We've assumed we are going to find a category, and that might not be the case. An InvalidOperationException would make sense
         public int GetRoundScore(string score)
         {
-            var scoreValues = _scoreParser.GetScoreValues(score);
+            var scoreValues = _scoreParser.GetScoreValues(score).ToList();
             var categoryName = _scoreParser.GetCategoryName(score);
-            var category = _categories.Single(x => x.Name == categoryName);
+            var category = _categorySelector.SelectCategory(scoreValues, categoryName, _categories);
             
-            return category.GetCategoryScore(scoreValues);
+            return category!.GetCategoryScore(scoreValues);
         }
     }
 }
