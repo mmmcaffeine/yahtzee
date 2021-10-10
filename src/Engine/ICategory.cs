@@ -4,6 +4,7 @@ namespace Dgt.Yahtzee.Engine
 {
     public interface ICategory
     {
-        public int GetCategoryScore(IEnumerable<int> scoreValues);
+        string Name { get; }
+        int GetCategoryScore(IEnumerable<int> scoreValues);
     }
 }

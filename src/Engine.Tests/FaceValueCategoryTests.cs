@@ -10,7 +10,7 @@ namespace Dgt.Yahtzee.Engine
         {
             // Arrange
             var scoreValues = new[] { 3, 5, 1, 3, 6 };
-            var sut = new FaceValueCategory(2);
+            var sut = new FaceValueCategory("twos", 2);
             
             // Act
             var categoryScore = sut.GetCategoryScore(scoreValues);
@@ -24,7 +24,7 @@ namespace Dgt.Yahtzee.Engine
         {
             // Arrange
             var scoreValues = new[] { 3, 5, 1, 3, 6 };
-            var sut = new FaceValueCategory(3);
+            var sut = new FaceValueCategory("threes", 3);
             
             // Act
             var categoryScore = sut.GetCategoryScore(scoreValues);
