@@ -6,7 +6,7 @@ namespace Dgt.Yahtzee.Engine
     public class FaceValueCategory : ICategory
     {
         public string Name { get; }
-        private int _faceValue = default;
+        private readonly int _faceValue;
 
         // TODO Parameter validation of the name - no nulls or empty strings
         public FaceValueCategory(string name, int faceValue)
