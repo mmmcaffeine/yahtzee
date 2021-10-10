@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using FluentAssertions;
+using Xunit;
 
 namespace Dgt.Yahtzee.Engine
 {
@@ -7,7 +8,7 @@ namespace Dgt.Yahtzee.Engine
         [Fact]
         public void Add_Should_ReturnSumOfTwoNumbers()
         {
-            Assert.Equal(5, ScoreParser.Add(3, 2));
+            ScoreParser.Add(3, 2).Should().Be(5);
         }
     }
 }
