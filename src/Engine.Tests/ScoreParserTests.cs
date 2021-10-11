@@ -15,7 +15,7 @@ namespace Dgt.Yahtzee.Engine
             var sut = new ScoreParser();
             
             // Act
-            var scoreValues = sut.GetScoreValues(score).ToList();
+            var scoreValues = sut.GetScoreValues(score);
             
             // Assert
             scoreValues.Should().BeEquivalentTo(expected);
