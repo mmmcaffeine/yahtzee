@@ -6,7 +6,7 @@ namespace Dgt.Yahtzee.Engine
 {
     public class ScoreParser : IScoreParser
     {
-        private const string ScoreValuesPattern = @"(?<=(\(|, ))(?<scoreValue>\d(?=(, |\))))";
+        private const string ScoreValuesPattern = @"(?<=(\(|, ))(?<scoreValue>\d+(?=(, |\))))";
 
         private readonly Regex _scoreValuesRegEx = new(ScoreValuesPattern, RegexOptions.Compiled);
         
