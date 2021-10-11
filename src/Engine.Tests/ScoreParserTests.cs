@@ -33,6 +33,10 @@ namespace Dgt.Yahtzee.Engine
             // Parse things other than six-side dice e.g. we can work with a D20
             yield return new object[] { "(10, 12, 7) tens", new[] { 10, 12, 7 } };
             yield return new object[] { "(4, 15, 9) yahtzee", new[] { 4, 15, 9 } };
+            
+            // Parse things even when we have superfluous whitespace or commas
+            yield return new object[] { "    (   10  ,   17, 7   )    pair", new[] { 10, 17, 7 } };
+            yield return new object[] { "(5, , , 4)", new[] { 5, 4 } };
         }
 
         // TODO Add theories for when the ScoreParser is less brittle
