@@ -7,7 +7,6 @@ namespace Dgt.Yahtzee.Engine
 {
     public class ScoreParserTests
     {
-        // TODO Add theories for when the ScoreParser is less brittle
         [Theory]
         [MemberData(nameof(GetGetScoreValuesData))]
         public void GetScoreValues_Should_ExtractDiceRollsFromScore(string score, IEnumerable<int> expected)
