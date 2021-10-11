@@ -1,9 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Dgt.Yahtzee.Engine
 {
     public class ScoreParser : IScoreParser
     {
+        private const string ScoreValuesPattern = @"\((?<scoreValues>\d, \d, \d, \d, \d)\)";
+        private const StringSplitOptions ScoreValuesStringSplitOptions = StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries;
+
+        private readonly Regex _scoreValuesRegEx = new(ScoreValuesPattern, RegexOptions.Compiled);
+        
         // TODO Validate for null and empty strings
         // TODO Replace with Regex parsing
         // TODO Throw FormatException if we cannot parse
@@ -17,11 +25,12 @@ namespace Dgt.Yahtzee.Engine
         // * Dice rolls will always end with a close paren
         public IEnumerable<int> GetScoreValues(string score)
         {
-            yield return int.Parse(score[1..2]);
-            yield return int.Parse(score[4..5]);
-            yield return int.Parse(score[7..8]);
-            yield return int.Parse(score[10..11]);
-            yield return int.Parse(score[13..14]);
+            var match = _scoreValuesRegEx.Match(score);
+            var scoreValues = match.Groups["scoreValues"].Value;
+            
+            return scoreValues
+                .Split(",", ScoreValuesStringSplitOptions)
+                .Select(int.Parse);
         }
 
         // TODO Validate for null and empty strings
