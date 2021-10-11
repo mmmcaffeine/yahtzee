@@ -54,19 +54,43 @@ namespace Dgt.Yahtzee.Engine
             }
         }
 
-        // TODO Add theories for when the ScoreParser is less brittle
-        [Fact]
-        public void GetCategoryName_Should_ExtractCategoryNameFromScore()
+        [Theory]
+        [MemberData(nameof(GetGetCategoryNameData))]
+        public void GetCategoryName_Should_ExtractCategoryNameFromScore(string score, string expectedCategoryName)
         {
             // Arrange
-            const string score = "(1, 1, 2, 4, 4) fours";
             var sut = new ScoreParser();
             
             // Act
             var categoryName = sut.GetCategoryName(score);
             
             // Assert
-            categoryName.Should().BeEquivalentTo("fours");
+            categoryName.Should().BeEquivalentTo(expectedCategoryName);
+        }
+
+        private static IEnumerable<object[]> GetGetCategoryNameData()
+        {
+            yield return new GetCategoryNameTestCase("(1, 1, 2, 4, 4) fours", "fours");
+            yield return new GetCategoryNameTestCase("(5, 5, 3, 1, 6)     chance", "chance");
+            yield return new GetCategoryNameTestCase("(6, 1, 3, 1, 5) yahtzee     ", "yahtzee");
+            yield return new GetCategoryNameTestCase("(3, 3, 1, 6, 5) full house", "full house");
+        }
+
+        private class GetCategoryNameTestCase
+        {
+            private string Score { get; }
+            private string ExpectedCategoryName { get; }
+            
+            public GetCategoryNameTestCase(string score, string expectedCategoryName)
+            {
+                Score = score;
+                ExpectedCategoryName = expectedCategoryName;
+            }
+            
+            public static implicit operator object[](GetCategoryNameTestCase testCase)
+            {
+                return new object[] { testCase.Score, testCase.ExpectedCategoryName };
+            }
         }
     }
 }
