@@ -7,8 +7,10 @@ namespace Dgt.Yahtzee.Engine
     public class ScoreParser : IScoreParser
     {
         private const string ScoreValuesPattern = @"(?<=(\(\s*|\s*,\s*))(?<scoreValue>\d+(?=(\s*,\s*|\s*\))))";
+        private const string CategoryNamePattern = @"\) (?<categoryName>.+)$";
 
         private readonly Regex _scoreValuesRegEx = new(ScoreValuesPattern, RegexOptions.Compiled);
+        private readonly Regex _categoryNameRegEx = new(CategoryNamePattern, RegexOptions.Compiled);
         
         // TODO Validate for null and empty strings
         // TODO Throw FormatException if we cannot parse
@@ -21,7 +23,6 @@ namespace Dgt.Yahtzee.Engine
         }
 
         // TODO Validate for null and empty strings
-        // TODO Replace with Regex parsing
         // TODO Throw FormatException if we cannot parse
         // TODO Make more reliable by eliminating the assumptions below
         
@@ -30,7 +31,7 @@ namespace Dgt.Yahtzee.Engine
         // * The category name will always go to the end of the string
         public string GetCategoryName(string score)
         {
-            return score[16..];
+            return _categoryNameRegEx.Match(score).Groups["categoryName"].Value;
         }
     }
 }
