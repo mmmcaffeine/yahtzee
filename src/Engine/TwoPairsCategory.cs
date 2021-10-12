@@ -18,12 +18,15 @@ namespace Dgt.Yahtzee.Engine
             }
             
             var pairs = groupings
-                .Select(grouping => (value: grouping.Key, count: grouping.Count() % 2 == 0 ? grouping.Count() : grouping.Count() - 1))
+                .Select(CreatePair)
                 .ToList();
-            
-            return pairs.Sum(pair => pair.count) == 4
-                ? pairs.Sum(pair => pair.value * pair.count)
+
+            return pairs.Sum(pair => pair.Count) == 4
+                ? pairs.Sum(pair => pair.FaceValue * pair.Count)
                 : 0;
+            
+            (int FaceValue, int Count) CreatePair(IGrouping<int, int> grouping) =>
+                (grouping.Key, grouping.Count() % 2 == 0 ? grouping.Count() : grouping.Count() - 1);
         }
     }
 }
