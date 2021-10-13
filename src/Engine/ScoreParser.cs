@@ -6,18 +6,21 @@ namespace Dgt.Yahtzee.Engine
 {
     public class ScoreParser : IScoreParser
     {
-        private const string ScoreValuesPattern = @"(?<=(\(\s*|\s*,\s*))(?<scoreValue>\d+(?=(\s*,\s*|\s*\))))";
-        private const string CategoryNamePattern = @"\)\s*(?<categoryName>.+?)\s*$";
+        private const string ScoreValuesSplitPattern = @"\s*\(\s*|\s*,\s*|\s*\).*";
+        private const string CategoryNameCapturePattern = @"\)\s*(?<categoryName>.+?)\s*$";
 
-        private static readonly Regex ScoreValuesRegex = new(ScoreValuesPattern, RegexOptions.Compiled);
-        private static readonly Regex CategoryNameRegex = new(CategoryNamePattern, RegexOptions.Compiled);
+        private static readonly Regex ScoreValuesRegex = new(ScoreValuesSplitPattern, RegexOptions.Compiled);
+        private static readonly Regex CategoryNameRegex = new(CategoryNameCapturePattern, RegexOptions.Compiled);
         
         // TODO Validate for null and empty strings
         // TODO Throw FormatException if we cannot parse
         public IEnumerable<int> GetScoreValues(string score)
         {
-            var matches = ScoreValuesRegex.Matches(score);
-            var scoreValues = matches.Select(m => m.Groups["scoreValue"].Value);
+            // Behaviour of the Split method is to include empty strings if consecutive delimiters are found, or if delimiters
+            // are found at the start or end of the input string. Although we might not expect the former, we definitely
+            // expect the latter
+            var results = ScoreValuesRegex.Split(score);
+            var scoreValues = results.Where(result => !string.IsNullOrWhiteSpace(result));
             
             return scoreValues.Select(int.Parse);
         }
